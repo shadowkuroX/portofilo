@@ -1,0 +1,156 @@
+/* ========= Base ========= */
+:root{
+  --card-bg: rgba(255,255,255,0.05);
+  --shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+
+body{
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#1e293b,#0f172a);
+  color: #f8fafc;
+  /* Төмендегі сұр панель болмас үшін ешқандай extra padding-bottom жоқ */
+  padding-bottom: 0;
+  overflow-x: hidden;
+}
+
+/* ========= Container ========= */
+.container{
+  width: min(98%, 850px);      /* Телефонда сәл кеңірек */
+  margin: 16px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  animation: fadeIn 500ms ease-out both;
+}
+@keyframes fadeIn{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ========= Typography ========= */
+h1{ font-size: 1.9em; margin: 12px 0 14px; color:#38bdf8; }
+p{ font-size: 1.02em; line-height: 1.6; margin: 10px 0; }
+.section-title{ margin-top: 22px; font-size: 1.22em; color:#34d399; }
+.highlight{ color:#facc15; font-weight: 700; }
+
+/* ========= Avatar ========= */
+img{
+  width: 128px; height: 128px; object-fit: cover; border-radius: 50%;
+  border: 4px solid #38bdf8; margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(56,189,248,0.25);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+img:hover{ transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 26px rgba(56,189,248,0.35); }
+
+/* ========= Info (center) ========= */
+.info{ text-align: center; margin-top: 16px; }
+.info p{
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 8px; font-size: 1em;
+}
+.info span{ margin-left: 0; }
+
+/* ========= Social (LEFT rail, vertical, round & small) ========= */
+.social-box{
+  position: fixed;        /* Тұрақты сол жақта, төменгі сұр панель жоқ */
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column; /* Тік тізім */
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(17,24,39,0.45);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+
+/* Тек иконка — мәтін HTML-де қалады, бетте жасырылған.
+   Астындағы «сызықша» (underline) толық өшіріледі. */
+.social-link{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0;
+  font-size: 0;                        /* мәтінді жасырамыз */
+  text-decoration: none !important;     /* underline жоқ */
+  -webkit-text-decoration: none !important;
+  text-decoration-thickness: 0 !important;
+  outline: none;
+  border: 2px solid rgba(255,255,255,0.12);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.social-link i{
+  font-size: 20px; line-height: 1; margin: 0;
+  text-decoration: none;
+}
+.social-link:hover{ transform: translateY(-2px) scale(1.02); }
+.social-link:active{ transform: translateY(0) scale(0.98); }
+
+/* Түстер */
+.wa-link{ background:#25D366; color:#fff; }
+.wa-link:hover{ box-shadow:0 8px 18px rgba(37,211,102,.35); }
+.tg-link{ background:#2AABEE; color:#fff; }
+.tg-link:hover{ box-shadow:0 8px 18px rgba(42,171,238,.35); }
+.insta-link{ background:#E4405F; color:#fff; }
+.insta-link:hover{ box-shadow:0 8px 18px rgba(228,64,95,.35); }
+
+/* ========= Language switch (top-right, compact) ========= */
+.lang-switch{
+  position: fixed; top: 8px; right: 8px;
+  display: flex; flex-direction: row; gap: 6px;
+  z-index: 1000;
+}
+.lang-btn{
+  background: rgba(255,255,255,0.12);
+  color: #f8fafc; font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 5px 10px; border-radius: 12px; min-width: 48px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.lang-btn[aria-pressed="true"]{ background: #38bdf8; color: #0f172a; border-color: transparent; }
+.lang-btn:hover{ transform: translateY(-2px) scale(1.02); }
+.lang-btn:active{ transform: translateY(0) scale(0.98); }
+
+/* ========= Reduced motion ========= */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
+
+/* ========= Responsive ========= */
+/* Телефон — кеңірек контент, сол жақ рельс жақынырақ, кнопкалар компакт */
+@media (max-width: 480px){
+  .container{ width: 98%; margin: 12px auto; padding: 16px; }
+  h1{ font-size: 1.8em; }
+  p{ font-size: 1.02em; }
+  .section-title{ font-size: 1.18em; }
+
+  .social-box{ left: 8px; gap: 8px; padding: 5px; }
+  .social-link{ width: 38px; height: 38px; }
+  .social-link i{ font-size: 18px; }
+}
+
+/* Орта экрандар */
+@media (min-width: 481px) and (max-width: 767px){
+  .container{ width: 96%; }
+}
+
+/* Үлкен экрандар */
+@media (min-width: 768px){
+  .container{ margin: 28px auto; padding: 28px; }
+  h1{ font-size: 2.2em; }
+  p{ font-size: 1.08em; }
+  .section-title{ font-size: 1.32em; }
+  img{ width: 160px; height: 160px; }
+}
