@@ -191,3 +191,99 @@
     setupComments();
   });
 })();
+// 1) МЫНАНЫ ӨЗ Firebase config-пен толтыр (Project settings → Your apps (Web))
+const firebaseConfig = {
+  // apiKey: "....",
+  // authDomain: "....firebaseapp.com",
+  // projectId: "....",
+  // storageBucket: "....appspot.com",
+  // messagingSenderId: "...",
+  // appId: "1:...:web:..."
+};
+
+// 2) Firebase іске қосу
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 3) Элементтер
+const form = document.getElementById("commentForm");
+const list = document.getElementById("commentsList");
+const status = document.getElementById("formStatus");
+const honeypot = document.getElementById("website"); // жасырын өріс болса (спамға қарсы)
+
+// 4) Пікірді жазу
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    status && (status.textContent = "");
+
+    if (honeypot && honeypot.value.trim() !== "") return; // бот болса, тоқтат
+
+    const name = (form.name?.value || "Қонақ").trim();
+    const message = (form.message?.value || "").trim();
+
+    if (!message) {
+      status && (status.textContent = "Пікір енгізіңіз.");
+      return;
+    }
+    if (message.length > 600) {
+      status && (status.textContent = "Мәтін тым ұзын (≤600).");
+      return;
+    }
+
+    try {
+      await db.collection("comments").add({
+        name,
+        message,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      form.reset();
+      status && (status.textContent = "Пікіріңіз жіберілді! 🙌");
+    } catch (err) {
+      console.error(err);
+      status && (status.textContent = "Қате кетті. Кейінірек көріңіз.");
+    }
+  });
+}
+
+// 5) Real-time оқу (соңғы 20 пікір)
+if (list) {
+  db.collection("comments")
+    .orderBy("created", "desc")
+    .limit(20)
+    .onSnapshot((snap) => {
+      list.innerHTML = "";
+      if (snap.empty) {
+        list.innerHTML = '<p class="muted">Әзірге пікір жоқ.</p>';
+        return;
+      }
+      snap.forEach((doc) => {
+        const d = doc.data();
+        const card = document.createElement("div");
+        card.className = "comment-card";
+
+        const head = document.createElement("div");
+        head.className = "comment-head";
+
+        const nm = document.createElement("strong");
+        nm.className = "comment-name";
+        nm.textContent = d.name || "Аноним";
+
+        const tm = document.createElement("span");
+        tm.className = "comment-time";
+        if (d.created && d.created.toDate) {
+          tm.textContent = d.created.toDate().toLocaleString();
+        }
+
+        const body = document.createElement("p");
+        body.className = "comment-text";
+        body.textContent = d.message || "";
+
+        head.appendChild(nm);
+        head.appendChild(tm);
+        card.appendChild(head);
+        card.appendChild(body);
+        list.appendChild(card);
+      });
+    });
+}
