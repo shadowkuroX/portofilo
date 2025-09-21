@@ -182,5 +182,79 @@
             );
         })();
     </script>
+
+
+<script>
+(() => {
+  const dbUrl = "https://shadowkurox-a74dd-default-rtdb.europe-west1.firebasedatabase.app/";
+  const commentsList = document.getElementById("commentsList");
+  const nameInput = document.getElementById("cName");
+  const msgInput = document.getElementById("cMsg");
+
+  // HTML-ға қауіпсіз енгізу үшін қарапайым escape
+  function escapeHTML(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  async function loadComments() {
+    try {
+      const res = await fetch(`${dbUrl}/messages.json`);
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      commentsList.innerHTML = "";
+
+      if (!data) {
+        commentsList.innerHTML = "<p>Әзірге пікірлер жоқ...</p>";
+        return;
+      }
+
+      const entries = Object.entries(data);
+
+      // 'display' өрісіне қарап жуықтай сұрыптаймыз (жаңасы жоғарыда)
+      entries.sort((a, b) => {
+        const dA = (a[1] && a[1].display) ? a[1].display : "";
+        const dB = (b[1] && b[1].display) ? b[1].display : "";
+        return dB.localeCompare(dA, undefined, { numeric: true });
+      });
+
+      for (const [name, info] of entries) {
+        const when = info && info.display ? info.display : "";
+        const msg  = info && info.Message ? info.Message : "";
+        const item = document.createElement("div");
+        item.className = "comment-item";
+        item.innerHTML = `
+          <div class="comment-head">
+            <strong>${escapeHTML(name)}</strong>
+            <span class="comment-date">${escapeHTML(when)}</span>
+          </div>
+          <p class="comment-body">${escapeHTML(msg)}</p>
+        `;
+        commentsList.appendChild(item);
+      }
+    } catch (err) {
+      console.error("Пікірлерді жүктеу қатесі:", err);
+      commentsList.innerHTML = "<p>Қате: пікірлерді жүктей алмадым.</p>";
+    }
+  }
+
+  // Жібергеннен кейін тізімді жаңарту үшін submit listener-ін кеңейтеміз
+  const form = document.getElementById("commentForm");
+  if (form) {
+    form.addEventListener("submit", async () => {
+      // шағын кідірістен кейін (серверге жеткенше) жаңартамыз
+      setTimeout(loadComments, 400);
+    });
+  }
+
+  // Бет жүктелгенде автоматты жүктеу
+  window.addEventListener("DOMContentLoaded", loadComments);
+})();
+</script>
+
 </body>
 </html>

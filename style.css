@@ -252,3 +252,47 @@ img:hover{ transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 26px rgba
   .comment-card{ padding: 10px 12px; }
   .btn-send{ padding: 11px 14px; }
 }
+.comments-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.comment-item {
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #1e293b; /* қою көкшіл фон */
+  border: 1px solid #334155; /* аздап ашықтау шекара */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.55);
+}
+
+.comment-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.comment-head strong {
+  font-size: 15px;
+  color: #38bdf8; /* көгілдір екпін */
+}
+
+.comment-date {
+  font-size: 12px;
+  color: #94a3b8; /* сұрлау */
+}
+
+.comment-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #f1f5f9; /* ашық мәтін */
+  white-space: pre-wrap;
+}
