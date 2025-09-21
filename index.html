@@ -84,15 +84,14 @@
     <form id="commentForm" class="comment-form" novalidate>
       <!-- Honeypot (спамға қарсы) -->
       <input type="text" name="website" id="website" autocomplete="off" tabindex="-1" aria-hidden="true" class="hp">
-
-      <div class="form-row">
-        <label for="cName">Атың</label>
-        <input id="cName" name="name" type="text" inputmode="text" placeholder="Атыңды жаз" required maxlength="40">
+     
+       <div class="form-row">
+        <textarea id="cMsg" name="message" rows="4" required maxlength="600"></textarea>
       </div>
 
-      <div class="form-row">
-        <label for="cMsg">Пікірің</label>
-        <textarea id="cMsg" name="message" rows="4" placeholder="Пікіріңді жазыңыз..." required maxlength="600"></textarea>
+<div class="form-row">
+
+        <input id="cName" name="name" type="text" inputmode="text" placeholder="Атыңды жаз" required maxlength="20">
       </div>
 
       <button class="btn-send" type="submit" aria-live="polite">Жіберу</button>
