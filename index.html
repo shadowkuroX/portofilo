@@ -121,7 +121,66 @@
     })();
   </script>
 
-  <!-- Firebase: fill your project config inside script.js (FIREBASE_CONFIG) -->
+<script>
+        (() => {
+            const dbUrl = "https://shadowkurox-a74dd-default-rtdb.europe-west1.firebasedatabase.app/";
+            const nameInput = document.getElementById("cName");
+            const msgInput = document.getElementById("cMsg");
+            const sendBtn = document.querySelector(".btn-send");
+            const form = sendBtn?.closest("form");
 
+            // Формат времени: 16-09-2025 time 21-45
+            function formatDate(d) {
+                const dd = String(d.getDate()).padStart(2, "0");
+                const mm = String(d.getMonth() + 1).padStart(2, "0");
+                const yyyy = d.getFullYear();
+                const hh = String(d.getHours()).padStart(2, "0");
+                const min = String(d.getMinutes()).padStart(2, "0");
+                return `${dd}-${mm}-${yyyy} time ${hh}-${min}`;
+            }
+
+            async function sendToFirebase() {
+                const name = nameInput.value.trim();
+                const message = msgInput.value.trim();
+                if (!name || !message) {
+                    alert("Жазыңыз: имя и сообщение!");
+                    return;
+                }
+
+                const now = new Date();
+                const formatted = formatDate(now);
+
+                // Тело запроса в нужном виде
+                const payload = {
+                    display: `“${formatted}”`,
+                    Message: `“${message}”`
+                };
+
+                // Сохраняем в путь messages/Имя
+                const res = await fetch(`${dbUrl}/messages/${encodeURIComponent(name)}.json`, {
+                    method: "PUT", // PUT, чтобы ключом стало имя
+                    headers: { "Content-Type": "application/json;charset=UTF-8" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    console.error("Firebase error", await res.text());
+                    alert("Қате болды!");
+                } else {
+                    nameInput.value = "";
+                    msgInput.value = "";
+                    alert("Жіберілді ✅");
+                }
+            }
+
+            (form ? form : sendBtn).addEventListener(
+                form ? "submit" : "click",
+                (e) => {
+                    e.preventDefault();
+                    sendToFirebase();
+                }
+            );
+        })();
+    </script>
 </body>
 </html>
