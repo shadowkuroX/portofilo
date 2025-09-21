@@ -151,10 +151,10 @@
                 const formatted = formatDate(now);
 
                 // Тело запроса в нужном виде
-                const payload = {
-                    display: `“${formatted}”`,
-                    Message: `“${message}”`
-                };
+               const payload = {
+  display: formatted,
+  Message: message
+};
 
                 // Сохраняем в путь messages/Имя
                 const res = await fetch(`${dbUrl}/messages/${encodeURIComponent(name)}.json`, {
@@ -254,6 +254,20 @@
   // Бет жүктелгенде автоматты жүктеу
   window.addEventListener("DOMContentLoaded", loadComments);
 })();
+const item = document.createElement("div");
+item.className = "comment-item";
+item.innerHTML = `
+  <div class="comment-avatar">👤</div>
+  <div class="comment-content">
+    <div class="comment-head">
+      <strong>${escapeHTML(name)}</strong>
+      <span class="comment-date">${escapeHTML(when)}</span>
+    </div>
+    <p class="comment-body">${escapeHTML(msg)}</p>
+  </div>
+`;
+commentsList.appendChild(item);
+
 </script>
 
 </body>
